@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDao">
+    <resultMap id="queryAllUserANDLessonANDCount" type="com.baizhi.entity.User">
+        <id property="id" column="u_id"/>
+        <result property="userName" column="u_username"/>
+        <result property="password" column="u_password"/>
+        <result property="name" column="u_name"/>
+        <result property="nickName" column="u_nickName"/>
+        <result property="sex" column="s_sex"/>
+        <result property="level" column="u_level"/>
+        <result property="time" column="u_time"/>
+        <result property="address" column="u_address"/>
+        <result property="imgPath" column="u_imgpath"/>
+        <result property="sign" column="u_sign"/>
+        <collection property="lessons" ofType="com.baizhi.entity.Lesson">
+            <id property="id" column="l_id"/>
+            <result property="name" column="l_name"/>
+            <!--计数器-->
+            <collection property="counts" ofType="com.baizhi.entity.Count">
+                <id property="id" column="c_id"/>
+                <result property="name" column="c_name"/>
+                <result property="count" column="c_count"/>
+            </collection>
+        </collection>
+
+    </resultMap>
+    <!--查询所有-->
+    <select id="finAllPage" resultMap="queryAllUserANDLessonANDCount">
+          SELECT
+            u.id AS u_id,
+            u. NAME AS u_name,
+            u.sex AS s_sex,
+            u.nickName AS u_nickName,
+            u.username AS u_username,
+            u. PASSWORD AS u_password,
+            u.time AS u_time,
+            u. LEVEL AS u_level,
+            u.imgPath AS u_imgpath,
+            u.address AS u_address,
+            u.sign AS u_sign,
+            l.id AS l_id,
+            l. NAME AS l_name,
+            c.id AS c_id,
+            c. NAME AS c_name,
+            c.count AS c_count
+        FROM
+            USER u
+            LEFT JOIN lesson l ON u.id = l.user_id
+            LEFT JOIN count c ON c.lesson_id = l.id
+            limit ${(page-1)*rows},#{rows}
+    </select>
+    <!--查询所有-->
+    <select id="queryAllDJ" resultMap="queryAllUserANDLessonANDCount">
+          select a.* from (
+            SELECT
+                u.id AS u_id,
+                u. NAME AS u_name,
+                u.sex AS s_sex,
+                u.nickName AS u_nickName,
+                u.username AS u_username,
+                u. PASSWORD AS u_password,
+                u.time AS u_time,
+                u. LEVEL AS u_level,
+                u.imgPath AS u_imgpath,
+                u.address AS u_address,
+                u.sign AS u_sign,
+                l.id AS l_id,
+                l. NAME AS l_name,
+                c.id AS c_id,
+                c. NAME AS c_name,
+                c.count AS c_count
+            FROM
+                USER u
+                LEFT JOIN lesson l ON u.id = l.user_id
+                LEFT JOIN count c ON c.lesson_id = l.id where level=0
+          ) a limit ${(page-1)*rows},#{rows}
+    </select>
+
+
+    <update id="updateData">
+        update user set level=#{level} where id=#{id}
+    </update>
+
+    <select id="findTotalCount" resultType="java.lang.Integer">
+        select count(*) from user
+    </select>
+    <select id="findTotalCountDJ" resultType="java.lang.Integer">
+        select count(*) from user where level=0
+    </select>
+
+
+    <select id="queryGroupMan" resultType="com.baizhi.vo.UserVO">
+        select address as name,count(*) as value from user WHERE sex='男' GROUP BY address,sex
+    </select>
+
+
+    <select id="queryGroupFemale" resultType="com.baizhi.vo.UserVO">
+        select address as name,count(*) as value from user WHERE sex='女' GROUP BY address,sex
+    </select>
+
+    <insert id="addDataAll">
+         insert into user values (#{id},#{userName},#{password},#{name},#{nickName},#{sex},#{level},#{time},#{address},#{imgPath},'96900dfaee2c416c9da569268de2e031',#{sign});
+    </insert>
+</mapper>

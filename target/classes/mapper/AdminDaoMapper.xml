@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AdminDao">
+    <select id="findOneByNameAndPassword" resultType="com.baizhi.entity.Admin">
+        select admin_id as id,
+               admin_name as name,
+               admin_password as password
+        from admin where admin_name=#{name} and admin_password=#{password}
+    </select>
+
+    <!--添加管理员-->
+    <insert id="addData">
+        insert into admin values(#{id},#{name},#{password})
+    </insert>
+    <!--移除管理员-->
+    <delete id="removeOneById">
+        delete from admin where admin_id=#{id}
+    </delete>
+    <!--修改密码-->
+    <update id="updateData">
+        update admin set admin_password=#{password} where admin_id=#{id}
+    </update>
+</mapper>

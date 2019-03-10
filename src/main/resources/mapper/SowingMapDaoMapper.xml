@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.SowingMapDao">
+    <!--查所有-->
+    <select id="finAllPage" resultType="com.baizhi.entity.SowingMap">
+        select
+          sowingmap_id as id,
+          sowingmap_name as name,
+          sowingmap_level as level,
+          sowingmap_url as url,
+          sowingmap_date as date
+        from sowingmap LIMIT ${(page-1)*rows},#{rows}
+    </select>
+    <!--修改-->
+    <update id="updateData">
+        update sowingmap set
+          sowingmap_name=#{name},
+          sowingmap_level=#{level},
+          sowingmap_url=#{url},
+          sowingmap_date=#{date}
+        where sowingmap_id=#{id}
+    </update>
+    <!--删除-->
+    <delete id="removeOneById">
+        delete from sowingmap where sowingmap_id=#{id}
+    </delete>
+    <!--添加-->
+    <insert id="addData">
+        insert into sowingmap values(#{id},#{name},#{level},#{url},#{date})
+    </insert>
+    <!--查询总数量-->
+    <select id="findTotalCount" resultType="java.lang.Integer">
+        select count(*) from sowingmap
+    </select>
+</mapper>

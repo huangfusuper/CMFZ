@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.GuruDao">
+    <resultMap id="findAllMap" type="com.baizhi.entity.Guru">
+        <id property="id" column="g_id"/>
+        <result property="name" column="g_name"/>
+        <result property="aliasname" column="g_aname"/>
+        <result property="guruImgPath" column="g_img"/>
+        <result property="level" column="g_level"/>
+        <collection property="children" ofType="com.baizhi.entity.Article">
+            <id property="id" column="a_id"/>
+            <result property="name" column="a_name"/>
+            <result property="detalis" column="a_det"/>
+            <result property="date" column="a_date"/>
+            <result property="arUrl" column="a_arUrl"/>
+        </collection>
+    </resultMap>
+
+    <!--查询所有-->
+    <select id="findAll" resultMap="findAllMap">
+        SELECT
+            g.id as g_id,
+            g.name as g_name,
+            g.aliasname as g_aname,
+            g.guruImgPath as g_img,
+            g.level as g_level,
+            a.id as a_id,
+            a.name as a_name,
+            a.detalis as a_det,
+            a.date as a_date,
+            a.arUrl as a_arUrl
+        from
+        guru g LEFT JOIN article a on g.id = a.guruid
+    </select>
+    <!--查询详情-->
+    <select id="queryOneGuru" resultType="com.baizhi.entity.Guru">
+        select id,name,aliasname,guruImgPath,level form guru where id=#{id}
+    </select>
+    <!--添加上师-->
+    <insert id="addData">
+        insert into guru values(#{id},#{name},#{aliasname},#{guruImgPath},#{level})
+    </insert>
+    <!--修改上师-->
+    <update id="updateData">
+        update guru set level=#{level} where id=#{id}
+    </update>
+</mapper>

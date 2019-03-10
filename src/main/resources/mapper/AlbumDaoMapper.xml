@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AlbumDao">
+
+    <resultMap id="querAlbumANDChildren" type="com.baizhi.entity.Album">
+        <id property="id" column="a_id"/>
+        <result property="name" column="a_title"/>
+        <result property="pubName" column="a_name"/>
+        <result property="brodcastname" column="a_brname"/>
+        <result property="count" column="a_count"/>
+        <result property="bries" column="a_bries"/>
+        <result property="createTime" column="a_time"/>
+        <result property="imgPath" column="a_imgPath"/>
+        <collection property="children" ofType="com.baizhi.entity.Children">
+            <id property="id" column="c_id"/>
+            <result property="name" column="c_name"/>
+            <result property="size" column="c_size"/>
+            <result property="length" column="c_length"/>
+            <result property="url" column="c_path"/>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="querAlbumANDChildren">
+        select a.id as a_id,
+			 a.title as a_title,
+			 a.name as a_name,
+			 a.brodcastname as a_brname,
+			 a.bries as a_bries,
+			 a.count as a_count,
+			 a.createTime as a_time,
+			 a.imgPath as a_imgPath,
+			 c.id as c_id,
+			 c.name as c_name,
+			 c.length as c_length,
+		     c.size as c_size,
+			 c.path as c_path
+        from album a left JOIN children c ON a.id=c.album_id
+    </select>
+
+    <!--添加一个专辑-->
+    <insert id="addData">
+        insert into album values(#{id},#{name},#{pubName},#{brodcastname},#{count},#{bries},#{createTime},#{imgPath})
+    </insert>
+
+    <!--查询一个专辑-->
+    <select id="findOneByID" resultMap="querAlbumANDChildren">
+        select a.id as a_id,
+			 a.title as a_title,
+			 a.name as a_name,
+			 a.brodcastname as a_brname,
+			 a.bries as a_bries,
+			 a.count as a_count,
+			 a.createTime as a_time,
+			 a.imgPath as a_imgPath,
+			 c.id as c_id,
+			 c.name as c_name,
+			 c.length as c_length,
+		     c.size as c_size,
+			 c.path as c_path
+        from album a left JOIN children c ON a.id=c.album_id where a.id=#{id}
+    </select>
+
+    <select id="findTotalCount" resultType="java.lang.Integer">
+        select count(*) from album
+    </select>
+
+</mapper>

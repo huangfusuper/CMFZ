@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.CategoryDao">
+    <resultMap id="CategoryQueryAllMap" type="com.baizhi.entity.Category">
+        <id property="id" column="c_id"/>
+        <result property="name" column="c_name"/>
+        <result property="conCls" column="c_cls"/>
+        <result property="level" column="c_level"/>
+        <collection property="categories" ofType="com.baizhi.entity.Category">
+            <id property="id" column="cc_id"/>
+            <result property="name" column="cc_name"/>
+            <result property="conCls" column="cc_cls"/>
+            <result property="level" column="cc_level"/>
+            <result property="URL" column="cc_url"/>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="CategoryQueryAllMap">
+        select c.categoryID as c_id,
+			 c.categoryName as c_name,
+			 c.categoryLevel as c_level,
+			 c.categoryIconCls as c_cls,
+			 cc.categoryID as cc_id,
+			 cc.categoryName as cc_name,
+			 cc.categoryLevel as cc_level,
+			 cc.categoryURL as cc_url,
+			 cc.categoryIconCls as cc_cls
+        from category c
+             INNER JOIN category cc on c.categoryID=cc.SuperClassID
+    </select>
+</mapper>
